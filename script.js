@@ -1,7 +1,7 @@
 const _question = document.getElementById('question');
 const _options = document.querySelector('.quiz-options');
 const _checkBtn = document.getElementById('check-answer');
-const _nextQuestionBtn = document.getElementById('next-question'); // Added Next Question button
+const _nextQuestionBtn = document.getElementById('next-question');
 const _playAgainBtn = document.getElementById('play-again');
 const _result = document.getElementById('result');
 const _correctScore = document.getElementById('correct-score');
@@ -9,7 +9,6 @@ const _totalQuestion = document.getElementById('total-question');
 
 let correctAnswer = "", correctScore = askedCount = 0, totalQuestion = 10;
 
-// load question from API
 async function loadQuestion(){
     const APIUrl = 'https://opentdb.com/api.php?amount=1';
     const result = await fetch(`${APIUrl}`)
@@ -18,10 +17,9 @@ async function loadQuestion(){
     showQuestion(data.results[0]);
 }
 
-// event listeners
 function eventListeners(){
     _checkBtn.addEventListener('click', checkAnswer);
-    _nextQuestionBtn.addEventListener('click', loadNextQuestion); // Add event listener for Next Question button
+    _nextQuestionBtn.addEventListener('click', loadNextQuestion);
     _playAgainBtn.addEventListener('click', restartQuiz);
 }
 
@@ -32,7 +30,6 @@ document.addEventListener('DOMContentLoaded', function(){
     _correctScore.textContent = correctScore;
 });
 
-// display question and options
 function showQuestion(data){
     _checkBtn.disabled = false;
     correctAnswer = data.correct_answer;
@@ -49,7 +46,6 @@ function showQuestion(data){
     selectOption();
 }
 
-// options selection
 function selectOption(){
     _options.querySelectorAll('li').forEach(function(option){
         option.addEventListener('click', function(){
@@ -62,7 +58,6 @@ function selectOption(){
     });
 }
 
-// answer checking
 function checkAnswer(){
     _checkBtn.disabled = true;
     if(_options.querySelector('.selected')){
@@ -80,35 +75,31 @@ function checkAnswer(){
     }
 }
 
-// to convert html entities into normal text of correct answer if there is any
 function HTMLDecode(textString) {
     let doc = new DOMParser().parseFromString(textString, "text/html");
     return doc.documentElement.textContent;
 }
 
-// Check count to see if the quiz is completed
 function checkCount(){
     askedCount++;
     setCount();
     if(askedCount == totalQuestion){
         _result.innerHTML += `<p>Your score is ${correctScore}.</p>`;
-        _nextQuestionBtn.style.display = "none"; // Hide Next Question button on reaching the end
+        _nextQuestionBtn.style.display = "none";
         _playAgainBtn.style.display = "block";
         _checkBtn.style.display = "none";
     } else {
-        _nextQuestionBtn.style.display = "block"; // Show Next Question button
-        _checkBtn.style.display = "none"; // Hide Check Answer button temporarily
+        _nextQuestionBtn.style.display = "block";
+        _checkBtn.style.display = "none";
     }
 }
 
-// Load the next question function
 function loadNextQuestion() {
-    _nextQuestionBtn.style.display = "none"; // Hide Next Question button
-    _checkBtn.style.display = "block"; // Show Check Answer button
+    _nextQuestionBtn.style.display = "none";
+    _checkBtn.style.display = "block";
     loadQuestion();
 }
 
-// Restart the quiz function
 function restartQuiz(){
     correctScore = askedCount = 0;
     _playAgainBtn.style.display = "none";
@@ -118,7 +109,6 @@ function restartQuiz(){
     loadQuestion();
 }
 
-// Update the total questions and correct scores displayed
 function setCount(){
     _totalQuestion.textContent = totalQuestion;
     _correctScore.textContent = correctScore;
